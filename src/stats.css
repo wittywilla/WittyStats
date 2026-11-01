@@ -1,0 +1,302 @@
+/* WittyStats. Tokens only, and every class prefixed wst-: the module brings no colour or size of
+   its own apart from how it mixes the theme's. Charts take their colours from the theme:
+   series 1 is the theme's accent, and series 2 and 3 turn its hue, held to a lightness and
+   strength that stay legible on the theme's surface. */
+.wst-page, .wst-dialog {
+  --wst-s1: var(--accent-text);
+  --wst-s2: var(--fg-2);
+  --wst-s3: var(--ok);
+  --wst-s0: var(--fg-3);
+  --wst-grid: var(--border);
+  --wst-axis: var(--border-strong);
+}
+@supports (color: oklch(from red l c h)) {
+  .wst-page, .wst-dialog {
+    /* Chosen by running every combination through a colour-blindness check on all the built-in
+       themes. Some pairs on some themes are in the check's lower band, which is only allowed
+       with a second way to tell them apart: each line's end is a different shape, and the
+       legend and table say which is which. */
+    --wst-s1: oklch(from var(--accent-text) .57 clamp(.12, c, .2) h);
+    --wst-s2: oklch(from var(--accent-text) .63 clamp(.12, c, .16) calc(h + 140));
+    --wst-s3: oklch(from var(--accent-text) .5 clamp(.12, c, .16) calc(h + 80));
+  }
+}
+
+/* A dashboard needs more room than a settings page's column. Only while this page is in it. */
+.set-shell:has(.wst-page) { max-width: none; grid-template-columns: minmax(0, 1fr); }
+.set-shell:has(.wst-page) .set-nav { display: none; }
+.set-shell:has(.wst-page) .set-back { display: block; margin-bottom: var(--sp-2); }
+
+.wst-page { min-width: 0; color: var(--fg); }
+.wst-title { margin: 0; font-size: var(--page-title); font-weight: var(--weight-heading); letter-spacing: var(--tracking-display); line-height: var(--leading-tight); }
+
+/* ---- top ---- */
+.wst-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--sp-2) var(--sp-4); margin-bottom: var(--sp-4); }
+.wst-head-actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.wst-live { display: flex; align-items: center; gap: var(--sp-2); margin: var(--sp-1) 0 0; color: var(--fg-2); font-size: var(--text-sm); }
+.wst-live i { width: var(--sp-2); height: var(--sp-2); border-radius: 50%; background: var(--fg-3); flex: none; }
+.wst-live.live i { background: var(--ok); }
+.wst-live.retrying i { background: var(--warn); }
+.wst-filters { display: grid; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.wst-chips { margin: 0; }
+.wst-filter-label, .wst-custom-label { flex: none; min-width: 3.25rem; color: var(--fg-3); font-size: var(--text-xs); font-weight: 600; }
+
+.wst-custom { display: grid; gap: var(--sp-3); margin-bottom: var(--sp-4); padding: var(--sp-4); border: 1px solid var(--border-strong); border-radius: var(--r-lg); background: var(--bg-2); }
+.wst-custom-hint { margin: 0; color: var(--fg-2); font-size: var(--text-sm); max-width: 72ch; }
+.wst-custom-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
+.wst-custom-label { min-width: 5rem; }
+
+.wst-btn[aria-disabled=true] { opacity: .45; cursor: default; }
+.wst-btn[aria-disabled=true]:hover { background: var(--bg-3); }
+.wst-btn.ghost[aria-disabled=true]:hover, .wst-btn.danger[aria-disabled=true]:hover { background: transparent; }
+.wst-icon { flex: none; vertical-align: -.15em; }
+/* A button showing only an icon says what it does when focus reaches it, as a remote has no hover. */
+.wst-btn.square { position: relative; }
+.wst-btn.square:focus-visible::after { content: attr(aria-label); position: absolute; z-index: var(--z-sticky); bottom: calc(100% + var(--sp-1)); left: 0; padding: 2px var(--sp-2); border-radius: var(--r-sm); background: var(--fg); color: var(--bg); font-size: var(--text-xs); font-weight: 500; white-space: nowrap; pointer-events: none; }
+.wst-card-actions .wst-btn.square:focus-visible::after, .wst-dialog-head .wst-btn.square:focus-visible::after { left: auto; right: 0; }
+.wst-dialog-head .wst-btn.square:focus-visible::after { bottom: auto; top: calc(100% + var(--sp-1)); }
+
+.wst-nothing { padding: var(--sp-8) var(--sp-4); border: 1px dashed var(--border-strong); border-radius: var(--r-lg); text-align: center; }
+.wst-nothing p { margin: 0 0 var(--sp-4); color: var(--fg-2); }
+.wst-nothing .wst-custom-row { justify-content: center; }
+
+/* ---- the grid ---- */
+.wst-page { container: wst-page / inline-size; }
+.wst-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); }
+@container wst-page (min-width: 34rem) {
+  .wst-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(9.5rem, auto); grid-auto-flow: dense; }
+  .wst-w2, .wst-w3, .wst-w4 { grid-column: span 2; }
+  .wst-h2 { grid-row: span 2; }
+  .wst-h3 { grid-row: span 3; }
+}
+/* Two columns, then four, so that widgets laid out in pairs leave no holes at either. */
+@container wst-page (min-width: 68rem) {
+  .wst-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .wst-w3 { grid-column: span 3; }
+  .wst-w4 { grid-column: span 4; }
+}
+
+/* ---- a widget ---- */
+.wst-card { position: relative; display: flex; flex-direction: column; min-width: 0; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-lg); padding: var(--sp-3) var(--sp-4) var(--sp-4); container: wst-card / inline-size; }
+.wst-card.unavailable { background: transparent; border-style: dashed; border-color: var(--border-strong); }
+.wst-card.customising { border-color: var(--border-strong); }
+.wst-card.dragging { opacity: .6; }
+.wst-card.drop-here { outline: var(--focus-width) solid var(--focus); outline-offset: var(--focus-offset); }
+.wst-card-head { display: flex; align-items: center; gap: var(--sp-2); min-height: var(--control-h-sm); margin-bottom: var(--sp-2); }
+.wst-card-head h2 { flex: 0 1 auto; min-width: 0; margin: 0; font-size: var(--text-md); font-weight: 600; line-height: var(--leading-snug); overflow-wrap: anywhere; }
+.wst-card-actions { display: flex; flex: none; gap: var(--sp-1); margin-left: auto; }
+.wst-card-body { display: flex; flex: 1; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.wst-card-tools { display: flex; flex-wrap: wrap; gap: var(--sp-1); margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--border); }
+.wst-grip { display: grid; place-items: center; flex: none; width: var(--sp-6); height: var(--control-h-sm); color: var(--fg-3); cursor: grab; touch-action: none; border-radius: var(--r-xs); }
+.wst-grip:hover { background: var(--hover); color: var(--fg); }
+.wst-resize { position: absolute; right: 0; bottom: 0; width: var(--sp-6); height: var(--sp-6); cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 60%, var(--fg-3) 60%, var(--fg-3) 68%, transparent 68%, transparent 78%, var(--fg-3) 78%, var(--fg-3) 86%, transparent 86%); border-bottom-right-radius: var(--r-lg); }
+
+.wst-tag { display: inline-flex; align-items: center; gap: var(--sp-1); padding: 2px var(--sp-2); border: 1px solid var(--border-strong); border-radius: var(--r-full); color: var(--fg-2); font-size: var(--text-xs); line-height: var(--leading-snug); }
+.wst-tag.warn { color: var(--warn); border-color: currentColor; }
+.wst-tag.danger { color: var(--danger); border-color: currentColor; }
+.wst-tag.estimate { flex: none; font-weight: 600; color: var(--fg); }
+
+.wst-state { display: flex; align-items: flex-start; gap: var(--sp-2); margin: 0; color: var(--fg-2); font-size: var(--text-md); line-height: var(--leading-snug); }
+.wst-state p { margin: 0; }
+.wst-state .wst-icon { color: var(--fg-3); margin-top: 2px; }
+.wst-card-body > .wst-state:only-child { flex: 1; align-items: center; justify-content: center; text-align: left; }
+.wst-state.waiting { align-items: center; }
+.wst-state.error { flex-wrap: wrap; color: var(--fg); }
+.wst-state.error .wst-icon { color: var(--danger); }
+.wst-dot { width: var(--sp-2); height: var(--sp-2); border-radius: 50%; background: var(--fg-3); animation: wst-pulse 1.4s var(--ease-standard) infinite; }
+@keyframes wst-pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .wst-dot { animation: none; } }
+
+/* ---- figures: value first, proportional digits, the same font as everything ---- */
+.wst-figures { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); margin: 0; }
+.wst-figures div { min-width: 0; }
+.wst-figures dt { color: var(--fg-3); font-size: var(--text-xs); line-height: var(--leading-snug); }
+.wst-figures dd { margin: 0; font-size: var(--text-lg); font-weight: 600; line-height: var(--leading-snug); overflow-wrap: anywhere; }
+.wst-figures .big dd { font-size: var(--text-3xl); font-weight: var(--weight-heading); letter-spacing: var(--tracking-heading); line-height: var(--leading-tight); }
+.wst-figures small { display: block; color: var(--fg-2); font-size: var(--text-xs); font-weight: 400; letter-spacing: 0; line-height: var(--leading-snug); }
+
+/* A figure or two beside a chart, where the card has the room. */
+.wst-split { display: flex; flex: 1; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.wst-split-side { display: grid; align-content: start; gap: var(--sp-2); min-width: 0; }
+.wst-split-main { display: flex; flex: 1; min-width: 0; }
+@container wst-card (min-width: 28rem) {
+  .wst-split { flex-direction: row; gap: var(--sp-4); }
+  .wst-split-side { flex: 0 0 9rem; }
+}
+
+/* ---- meters ---- */
+.wst-meters { display: grid; gap: var(--sp-2); }
+.wst-meter { display: grid; gap: var(--sp-1); min-width: 0; --wst-fill: var(--accent); }
+.wst-meter.warn { --wst-fill: var(--warn); }
+.wst-meter.danger { --wst-fill: var(--danger); }
+.wst-meter-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--sp-3); font-size: var(--text-sm); color: var(--fg-2); }
+.wst-meter-text { color: var(--fg); font-variant-numeric: tabular-nums; }
+.wst-level { display: inline-flex; align-items: center; gap: var(--sp-1); margin-right: var(--sp-2); font-weight: 600; }
+.wst-meter.warn .wst-level { color: var(--warn); }
+.wst-meter.danger .wst-level { color: var(--danger); }
+.wst-meter-track { height: var(--sp-2); border-radius: var(--r-full); background: color-mix(in srgb, var(--fg) 14%, transparent); overflow: hidden; }
+.wst-meter-track i { display: block; width: 100%; height: 100%; background: var(--wst-fill); border-radius: var(--r-full); }
+
+/* ---- charts ---- */
+.wst-c0 { --wst-c: var(--wst-s0); } .wst-c1 { --wst-c: var(--wst-s1); } .wst-c2 { --wst-c: var(--wst-s2); } .wst-c3 { --wst-c: var(--wst-s3); }
+.wst-warn { --wst-c: var(--warn); } .wst-danger { --wst-c: var(--danger); }
+.wst-line, .wst-cols-figure { display: flex; flex: 1; flex-direction: column; gap: var(--sp-1); margin: 0; min-width: 0; }
+.wst-chart-title { color: var(--fg-3); font-size: var(--text-xs); line-height: var(--leading-snug); }
+.wst-line-box { position: relative; display: flex; flex: 1; gap: var(--sp-2); min-height: 6rem; }
+.wst-line.large .wst-line-box { min-height: 13rem; }
+.wst-yaxis { position: relative; flex: none; width: 3.75rem; color: var(--fg-3); font-size: var(--text-2xs); font-variant-numeric: tabular-nums; }
+.wst-yaxis span { position: absolute; right: 0; transform: translateY(-50%); white-space: nowrap; }
+.wst-yaxis span:first-child { transform: none; }
+.wst-yaxis span:last-child { transform: translateY(-100%); }
+.wst-plot { position: relative; flex: 1; min-width: 0; margin-right: var(--sp-1); touch-action: pan-y; border-radius: var(--r-xs); }
+.wst-plot svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.wst-grid-line { stroke: var(--wst-grid); stroke-width: 1; }
+.wst-base-line { stroke: var(--wst-axis); stroke-width: 1; }
+.wst-stroke { fill: none; stroke: var(--wst-c); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.wst-area { fill: var(--wst-c); opacity: .1; stroke: none; }
+.wst-c0.wst-stroke { stroke-width: 1; }
+/* The end of a line is marked by shape as well as colour. */
+.wst-end { position: absolute; width: var(--sp-2); height: var(--sp-2); margin: calc(-1 * var(--sp-1)) 0 0 calc(-1 * var(--sp-1)); background: var(--wst-c); box-shadow: 0 0 0 2px var(--bg-2); pointer-events: none; }
+.wst-dialog .wst-end { box-shadow: 0 0 0 2px var(--bg-2); }
+.wst-m-round { border-radius: 50%; }
+.wst-m-square { border-radius: var(--r-xs); }
+.wst-m-diamond { transform: rotate(45deg) scale(.9); border-radius: var(--r-xs); }
+.wst-m-muted { display: none; }
+.wst-cross { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--fg-3); pointer-events: none; }
+.wst-tip { position: absolute; z-index: var(--z-sticky); top: var(--sp-1); width: max-content; max-width: min(14rem, 100%); padding: var(--sp-1) var(--sp-2); margin: 0 var(--sp-2); border-radius: var(--r-sm); background: var(--bg-4); border: 1px solid var(--border-strong); box-shadow: var(--e-2); color: var(--fg); font-size: var(--text-xs); line-height: var(--leading-snug); pointer-events: none; }
+.wst-tip[hidden], .wst-cross[hidden] { display: none; }
+.wst-tip-title { color: var(--fg-2); }
+.wst-tip-row { display: flex; align-items: center; gap: var(--sp-1); font-variant-numeric: tabular-nums; }
+.wst-tip-row span { color: var(--fg-2); }
+.wst-xaxis { display: flex; justify-content: space-between; margin-left: calc(3.75rem + var(--sp-2)); margin-right: var(--sp-1); color: var(--fg-3); font-size: var(--text-2xs); font-variant-numeric: tabular-nums; }
+.wst-chart-note { display: grid; flex: 1; place-items: center; min-height: 6rem; padding: var(--sp-3); border: 1px dashed var(--border-strong); border-radius: var(--r-md); color: var(--fg-2); font-size: var(--text-sm); text-align: center; }
+.wst-chart-note.waiting { border-color: var(--border); color: var(--fg-3); }
+
+.wst-legend { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-4); margin: 0; padding: 0; list-style: none; color: var(--fg-2); font-size: var(--text-xs); }
+.wst-legend li { display: inline-flex; align-items: center; gap: var(--sp-1); }
+.wst-legend strong { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+.wst-key-line { display: inline-block; flex: none; width: var(--sp-3); height: 2px; border-radius: var(--r-xs); background: var(--wst-c); }
+.wst-key-mark { display: inline-block; flex: none; width: var(--sp-2); height: var(--sp-2); margin-left: calc(-1 * var(--sp-2)); background: var(--wst-c); }
+.wst-key-box { display: inline-block; flex: none; width: var(--sp-3); height: var(--sp-3); border-radius: var(--r-xs); background: var(--wst-c); }
+
+/* Columns grow from one baseline, with air between, and round only at the data end. */
+.wst-cols { position: relative; flex: 1; display: flex; align-items: stretch; gap: 2px; min-width: 0; margin-right: var(--sp-1); border-bottom: 1px solid var(--wst-axis); touch-action: pan-y; }
+.wst-col { flex: 1; min-width: 0; max-width: 1.5rem; margin: 0 auto; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; }
+.wst-col:hover { background: var(--hover); }
+.wst-seg { display: block; flex: none; background: var(--wst-c); min-height: 1px; }
+.wst-seg:first-child { border-radius: var(--r-xs) var(--r-xs) 0 0; }
+.wst-xlabels { display: flex; gap: 2px; margin-left: calc(3.75rem + var(--sp-2)); margin-right: var(--sp-1); color: var(--fg-3); font-size: var(--text-2xs); font-variant-numeric: tabular-nums; }
+.wst-xlabels span { flex: 1; min-width: 0; max-width: 1.5rem; margin: 0 auto; white-space: nowrap; }
+
+/* Bars: label and value on a line, the mark beneath, one colour. */
+.wst-bars-box { display: grid; gap: var(--sp-1); min-width: 0; }
+.wst-bars { display: grid; gap: var(--sp-2); margin: 0; padding: 0; list-style: none; }
+.wst-bars li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px var(--sp-3); font-size: var(--text-sm); }
+.wst-bar-label { min-width: 0; overflow-wrap: anywhere; color: var(--fg); }
+.wst-bar-value { color: var(--fg-2); font-variant-numeric: tabular-nums; text-align: right; }
+.wst-bar-track { grid-column: 1 / -1; display: block; height: var(--sp-2); }
+.wst-bar-track i { display: block; height: 100%; background: var(--wst-s1); border-radius: 0 var(--r-xs) var(--r-xs) 0; }
+
+/* ---- lists of things ---- */
+.wst-items { display: grid; gap: var(--sp-3); margin: 0; padding: 0; list-style: none; }
+.wst-item { display: grid; gap: var(--sp-2); min-width: 0; padding-top: var(--sp-3); border-top: 1px solid var(--border); }
+.wst-item:first-child { padding-top: 0; border-top: 0; }
+.wst-item-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--sp-1) var(--sp-3); }
+.wst-item-name { display: grid; min-width: 0; font-size: var(--text-md); line-height: var(--leading-snug); }
+.wst-item-name strong { font-weight: 600; overflow-wrap: anywhere; }
+.wst-item-name span { color: var(--fg-2); font-size: var(--text-sm); overflow-wrap: anywhere; }
+.wst-tags { display: flex; flex-wrap: wrap; gap: var(--sp-1); }
+.wst-facts { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-4); margin: 0; font-size: var(--text-sm); }
+.wst-facts dt { color: var(--fg-3); font-size: var(--text-xs); }
+.wst-facts dd { margin: 0; font-variant-numeric: tabular-nums; }
+.wst-item-note, .wst-note, .wst-more { margin: 0; color: var(--fg-2); font-size: var(--text-xs); line-height: var(--leading-snug); }
+.wst-note { padding-left: var(--sp-2); border-left: 2px solid var(--border-strong); max-width: 62ch; }
+
+/* ---- tables ---- */
+.wst-tables { display: grid; gap: var(--sp-4); min-width: 0; }
+.wst-table-wrap { min-width: 0; display: grid; gap: var(--sp-1); overflow-x: auto; }
+.wst-table caption { padding-bottom: var(--sp-1); caption-side: top; color: var(--fg-2); font-size: var(--text-xs); text-align: left; }
+.wst-table tbody th { padding: var(--sp-2) var(--sp-3) var(--sp-2) 0; border-bottom: 1px solid var(--border); color: var(--fg); font-size: var(--text-sm); font-weight: 500; letter-spacing: 0; text-transform: none; text-align: left; white-space: normal; overflow-wrap: break-word; }
+.wst-table th:first-child { padding-left: 0; }
+.wst-table td { padding: var(--sp-2) var(--sp-3); font-size: var(--text-sm); overflow-wrap: break-word; }
+.wst-table th.end, .wst-table td.end { text-align: right; }
+.wst-table tbody tr:last-child th { border-bottom: 0; }
+/* Too narrow for columns: each row stacks, with its labels beside its values. */
+@container wst-card (max-width: 30rem) {
+  .wst-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .wst-table, .wst-table tbody, .wst-table tr, .wst-table td, .wst-table tbody th { display: block; }
+  .wst-table caption { display: block; }
+  .wst-table tr { padding: var(--sp-1) 0; border-bottom: 1px solid var(--border); }
+  .wst-table tbody tr:last-child { border-bottom: 0; }
+  .wst-table tbody th { padding: var(--sp-1) 0; border: 0; font-weight: 600; }
+  .wst-table td { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-4); padding: 2px 0; border: 0; text-align: right; }
+  .wst-table td::before { content: attr(data-label); flex: none; max-width: 55%; color: var(--fg-3); font-size: var(--text-xs); text-align: left; }
+}
+
+/* The same for a table with many columns, until there's room for them all. */
+@container wst-card (max-width: 60rem) {
+  .wst-table.many thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .wst-table.many, .wst-table.many tbody, .wst-table.many tr, .wst-table.many td, .wst-table.many tbody th { display: block; }
+  .wst-table.many caption { display: block; }
+  .wst-table.many tr { padding: var(--sp-1) 0; border-bottom: 1px solid var(--border); }
+  .wst-table.many tbody tr:last-child { border-bottom: 0; }
+  .wst-table.many tbody th { padding: var(--sp-1) 0; border: 0; font-weight: 600; }
+  .wst-table.many td { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-4); padding: 2px 0; border: 0; text-align: right; }
+  .wst-table.many td::before { content: attr(data-label); flex: none; max-width: 55%; color: var(--fg-3); font-size: var(--text-xs); text-align: left; }
+}
+
+/* ---- dialogs ---- */
+.wst-dialog { container: wst-card / inline-size; display: flex; flex-direction: column; }
+.wst-dialog-wide.modal { max-width: min(72rem, 100%); }
+.wst-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-3); margin-bottom: var(--sp-3); }
+.wst-dialog-head h2 { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.wst-dialog-desc { margin: 0 0 var(--sp-3); color: var(--fg-2); font-size: var(--text-md); max-width: 62ch; }
+.wst-detail { display: grid; gap: var(--sp-5); margin-top: var(--sp-3); min-width: 0; }
+.wst-detail-charts { display: grid; gap: var(--sp-4); min-width: 0; }
+.wst-dialog .actions { position: sticky; bottom: calc(-1 * var(--sp-6)); margin-bottom: calc(-1 * var(--sp-6)); padding: var(--sp-3) 0 var(--sp-6); background: var(--bg-2); }
+.wst-field { display: grid; gap: var(--sp-1); font-size: var(--text-sm); color: var(--fg-2); }
+.wst-field .input { width: 100%; }
+.wst-field-error { margin: var(--sp-2) 0 0; color: var(--danger); font-size: var(--text-sm); }
+
+.wst-add { display: grid; gap: var(--sp-4); }
+.wst-add h3 { margin: 0 0 var(--sp-1); color: var(--fg-3); font-size: var(--text-xs); font-weight: 600; }
+.wst-add ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--sp-2); margin: 0; padding: 0; list-style: none; }
+.wst-add-item { display: flex; align-items: flex-start; gap: var(--sp-2); width: 100%; min-height: var(--control-h); padding: var(--sp-2) var(--sp-3); border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-3); color: var(--fg); text-align: left; }
+.wst-add-item:hover { background: var(--bg-4); }
+.wst-add-item span { display: grid; min-width: 0; font-size: var(--text-md); }
+.wst-add-item strong { font-weight: 600; }
+.wst-add-item small { color: var(--fg-2); font-size: var(--text-xs); line-height: var(--leading-snug); }
+
+.wst-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* ---- fingers: 44 pixels to aim at ---- */
+@media (pointer: coarse) {
+  .wst-page .btn.sm, .wst-page .chip, .wst-dialog .btn.sm, .wst-dialog .chip { min-height: 2.75rem; }
+  .wst-page .btn.sm.square, .wst-dialog .btn.sm.square { width: 2.75rem; }
+  .wst-page .wst-card-head { min-height: 2.75rem; }
+  .wst-grip { width: 2.75rem; height: 2.75rem; }
+  .wst-resize { width: 2.75rem; height: 2.75rem; }
+  .wst-card.customising { padding-bottom: var(--sp-8); }
+}
+
+/* ---- ten feet: bigger, roomier, and no handle that only a pointer can use ---- */
+.using-controller .wst-page .btn.sm, .using-controller .wst-page .chip, .using-controller .wst-dialog .btn.sm, .using-controller .wst-dialog .chip { min-height: var(--control-h); }
+.using-controller .wst-page .btn.sm.square, .using-controller .wst-dialog .btn.sm.square { width: var(--control-h); }
+.using-controller .wst-grip, .using-controller .wst-resize { display: none; }
+.using-controller .wst-table td, .using-controller .wst-table tbody th, .using-controller .wst-bars li { font-size: var(--text-md); }
+.using-controller .wst-figures dt, .using-controller .wst-facts dt, .using-controller .wst-chart-title, .using-controller .wst-legend, .using-controller .wst-yaxis, .using-controller .wst-xaxis, .using-controller .wst-xlabels { font-size: var(--text-sm); }
+@media (pointer: none) {
+  .wst-page .btn.sm, .wst-page .chip, .wst-dialog .btn.sm, .wst-dialog .chip { min-height: var(--control-h); }
+  .wst-page .btn.sm.square, .wst-dialog .btn.sm.square { width: var(--control-h); }
+  .wst-grip, .wst-resize { display: none; }
+  .wst-table td, .wst-table tbody th, .wst-bars li { font-size: var(--text-md); }
+  .wst-figures dt, .wst-facts dt, .wst-chart-title, .wst-legend, .wst-yaxis, .wst-xaxis, .wst-xlabels { font-size: var(--text-sm); }
+}
+
+@media (forced-colors: active) {
+  .wst-stroke { stroke: CanvasText; }
+  .wst-area { fill: CanvasText; }
+  .wst-grid-line, .wst-base-line { stroke: GrayText; }
+  .wst-seg, .wst-bar-track i, .wst-meter-track i, .wst-end, .wst-key-line, .wst-key-mark, .wst-key-box { background: CanvasText; forced-color-adjust: none; }
+  .wst-meter-track { border: 1px solid CanvasText; }
+}
