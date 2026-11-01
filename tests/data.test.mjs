@@ -196,7 +196,8 @@ test('a drive\'s health is words, and nothing until it is known', () => {
     now: { time: 1, volumes: [{ mount: 'C:\\', kind: 'fixed', type: 'ntfs', total: 100, free: 50 }] }, samples: 1, report: drives ? { drives } : null, reportError: null,
     range: '1h', series: () => null, history: { loading: false, failed: false }, clock: 1,
   })
-  const view = (drives) => buildView('disks', ctx(drives))
+  const view = (drives) => buildView('disks', ctx(drives)).view
+  assert.equal(view(undefined).state, 'ok', 'disks don\'t wait for the report')
   assert.doesNotMatch(view(undefined).items[0].sub, /health|healthy|attention/)
   assert.match(view([{ mount: 'C:\\', checked: true, lines: ['Fine.'] }]).items[0].sub, /healthy/)
   assert.match(view([{ mount: 'C:\\', checked: true, bad: true, lines: ['Failing.'] }]).items[0].sub, /needs attention/)

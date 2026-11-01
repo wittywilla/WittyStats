@@ -151,7 +151,7 @@ function Dashboard({ host, store, catalog, initial }: { host: Host; store: Stats
     for (const id of onScreen) {
       const d = WIDGET_BY_ID.get(id)
       if (!d || !allowed(d, catalog) || !availability(d, catalog).ok) continue
-      if (d.report) report = true
+      if (d.report || d.alsoReport) report = true
       for (const s of seriesFor(d, id === detail)) series.add(s)
     }
     store.setNeeds(report, [...series].sort(), saved.range)

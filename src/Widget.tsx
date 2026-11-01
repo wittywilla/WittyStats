@@ -40,7 +40,7 @@ export function contextOf(store: StatsStore, range: string): Ctx {
 }
 
 const relevant = (def: WidgetDef, s: Slice) =>
-  s === 'catalog' || (s === 'now' && (!!def.live || !!def.series)) || (s === 'report' && !!def.report) || (s === 'history' && !!(def.series || def.detailSeries))
+  s === 'catalog' || (s === 'now' && (!!def.live || !!def.series)) || (s === 'report' && !!(def.report || def.alsoReport)) || (s === 'history' && !!(def.series || def.detailSeries))
 
 // A widget's numbers, kept up to date. `showing` false means it's scrolled away, and it then
 // costs nothing until it comes back.

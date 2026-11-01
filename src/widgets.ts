@@ -11,6 +11,7 @@ export type WidgetDef = {
   full?: boolean // only for an account with the whole machine, even if the section is theirs
   live?: string[] // sections asked for on the stream
   report?: boolean
+  alsoReport?: boolean // uses it if it's there, and doesn't wait for it
   series?: string[] // history on the card
   detailSeries?: string[] // and more in its detail view
   w: number
@@ -27,7 +28,7 @@ export const WIDGETS: WidgetDef[] = [
   d('memory', 'Memory', 'How much is in use, now and over time', 'Machine', 'memory', 2, 1, { live: ['memory'], series: ['memory'] }),
   d('swap', 'Swap', 'Memory kept on disk when memory runs short', 'Machine', 'memory', 1, 1, { live: ['memory'], series: ['swap'] }),
   d('gpu', 'Graphics', 'How busy each card is, with its encoder sessions', 'Machine', 'gpu', 2, 1, { live: ['gpu'] }),
-  d('disks', 'Disk space', 'What’s used and free on each disk', 'Machine', 'disks', 2, 1, { live: ['disks'], report: true }),
+  d('disks', 'Disk space', 'What’s used and free on each disk', 'Machine', 'disks', 2, 1, { live: ['disks'], alsoReport: true }),
   d('diskio', 'Disk speed', 'Reading, writing and how busy each disk is', 'Machine', 'diskio', 2, 1, { live: ['diskio'], series: ['diskRead', 'diskWrite'] }),
   d('network', 'Network', 'Traffic on each connection', 'Machine', 'network', 2, 1, { live: ['network'], series: ['netRx', 'netTx'] }),
   d('process', 'This server', 'What the server program itself is using', 'This server', 'process', 2, 2, { live: ['process'], series: ['rss', 'heap'], detailSeries: ['processCpu', 'goroutines'] }),
