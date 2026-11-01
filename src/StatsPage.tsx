@@ -55,7 +55,7 @@ export function StatsPage({ host }: { host: Host }) {
     return (
       <div className="wst-page">
         <h1 className="wst-title">Statistics</h1>
-        <p className="wst-state"><Icon name="info" size={16} /> Statistics aren’t available to this account. The server’s owner chooses who can see them, in Settings.</p>
+        <p className="wst-state"><Icon name="info" size={16} /> Statistics aren’t available to this account. The server’s owner chooses who can see them, under Settings, Activity.</p>
       </div>
     )
   }
@@ -308,6 +308,7 @@ function Dashboard({ host, store, catalog, initial }: { host: Host; store: Stats
           {STREAM_WORDS[stream] && <p className={'wst-live ' + stream} role="status"><i aria-hidden="true" />{STREAM_WORDS[stream]}</p>}
         </div>
         <div className="wst-head-actions" data-nav-group>
+          <a className="btn ghost sm wst-btn" href="/help/stats" target="_blank" rel="noreferrer">Help</a>
           {sections.length > 0 && <Btn small variant="ghost" icon={stream === 'paused' ? 'play' : 'pause'} label={stream === 'paused' ? 'Resume live numbers' : 'Pause live numbers'} act="pause" onClick={() => { store.setPaused(!store.isPaused) }}>{stream === 'paused' ? 'Resume' : 'Pause'}</Btn>}
           <Btn small variant={customising ? undefined : 'ghost'} icon="tune" label="Customise this screen" act="customise" pressed={customising} onClick={() => { focusAfter.current = customising ? '[data-wst-act=customise]' : '[data-wst-act=add]'; setCustomising((c) => !c) }}>Customise</Btn>
         </div>

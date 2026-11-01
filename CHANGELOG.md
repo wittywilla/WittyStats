@@ -2,6 +2,11 @@
 
 What changed in WittyStats, newest first.
 
+## Unreleased
+
+- A **Help** link at the top of the page opens the Server statistics guide, and the page says where the owner chooses who may look.
+- The workflows use WittyModule 0.3.0, as the other modules do.
+
 ## 0.1.1
 
 - The disk space widget says what each drive reports about its own health, where the system will say.

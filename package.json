@@ -1,6 +1,6 @@
 {
   "name": "@wittywilla/wittystats",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A statistics screen for WittyMediaServer that you arrange yourself, with charts, tables and exports on every device.",
   "license": "Apache-2.0",
   "author": "WittyWilla (https://github.com/wittywilla)",
