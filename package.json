@@ -1,0 +1,25 @@
+{
+  "name": "@wittywilla/wittystats",
+  "version": "0.1.0",
+  "description": "A statistics screen for WittyMediaServer that you arrange yourself, with charts, tables and exports on every device.",
+  "license": "Apache-2.0",
+  "author": "WittyWilla (https://github.com/wittywilla)",
+  "type": "module",
+  "main": "./index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./*.css": "./*.css"
+  },
+  "scripts": {
+    "build:bundle": "node build-bundle.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "repository": "github:wittywilla/WittyStats",
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "vite": "^6.3.0"
+  }
+}
