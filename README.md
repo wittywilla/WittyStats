@@ -1,27 +1,10 @@
-<h1 align="center">WittyStats</h1>
+# WittyStats
 
-<p align="center">
-  <b>A statistics screen for WittyMediaServer that you arrange yourself.</b><br>
-  The machine, who is playing what, your libraries and their history, as charts or tables, on every device.
-</p>
+A statistics screen for WittyMediaServer that you arrange yourself: the machine, who is playing what, your libraries and their history, as charts or tables. You need it if you want to see those numbers on a page of their own.
 
-<p align="center">
-  <a href="LICENSE"><img alt="Licence: Apache-2.0" src="https://img.shields.io/badge/licence-Apache--2.0-blue.svg"></a>
-</p>
+It's the screen only. The server collects the numbers and decides who may see what, with or without this module.
 
-<p align="center">
-  <a href="#what-it-shows">What it shows</a> ·
-  <a href="#how-the-layouts-work">Layouts</a> ·
-  <a href="#every-device">Every device</a> ·
-  <a href="#what-it-costs">What it costs</a> ·
-  <a href="#how-its-built">How it's built</a>
-</p>
-
-> WittyStats is developed and released here. Issues and pull requests are welcome.
-
-It's the screen only. The numbers belong to [WittyMediaServer](https://github.com/wittywilla/WittyMediaServer), which collects them, decides who may see what, and works just the same without this module. The server's guide to them is `docs/STATS.md`.
-
-## What it shows
+## What it does
 
 | Group | Widgets |
 |---|---|
@@ -40,51 +23,53 @@ Every widget has a **switch to a table**, and one switch does them all. Tables a
 
 **Details** opens any widget to more series and every row, with **CSV and JSON** of what's shown. The files are made in the browser from what it already holds. A CSV cell that a spreadsheet would run as a formula gets a quote in front of it, as a title on a media server is anyone's to choose. Numbers stay raw with their unit in the heading, and times are ISO dates.
 
-## How the layouts work
+**Layouts.** Choose **Customise** to move, resize and remove widgets, with buttons or by dragging, and **Undo** to go back. You can keep up to eight layouts. The presets are Simple, Standard and Advanced, and they replace what's on the layout on screen. **Reset to stock** asks first. Layouts are saved per person.
 
-Choose **Customise**. Each widget gets buttons to move it earlier or later, make it wider, narrower, taller or shorter, and remove it, and each change is read out to a screen reader. With a mouse or finger you can also drag its handle and its corner. There's an **Undo**.
+**What it costs.** Nothing until the page opens. Then one stream, asking only for what's on the layout and only while the page is showing. The report and histories are fetched when a widget that needs them is near the screen, no more than once a minute. There's no polling for live numbers and no chart library.
 
-- **Up to eight layouts** per person: create (a copy of what's on screen), rename, delete, and switch between them.
-- **Presets:** Simple, Standard and Advanced replace what's on the layout on screen. Undo brings it back.
-- **Reset to stock** asks first, then goes back to one layout with the Standard preset.
-- **The grid** has four columns on a wide screen, two on a medium one, and one on a phone. A widget is 1 to 4 wide and 1 to 3 tall, and asks for no more than the screen has.
+How to use it is in **Help** inside WittyMediaServer: see the statistics guide.
 
-Layouts are saved per person through the host's small store, in under 10 KB even when full: a widget is one short string such as `cpu:2:1`. What comes back from the store is never trusted. Damaged data gives stock, and widgets it doesn't know are dropped (`src/layout.ts`, with tests).
+## How to get it
 
-## Every device
+An admin adds it from the module store inside WittyMediaServer: **Settings → Modules**, then **Browse the store**, then **Add** beside WittyStats. That needs WittyMediaServer 0.6.0-alpha or later, and it works with nothing older. The range this version fits is in `module.json`: 0.6.0-alpha through 0.6.x.
 
-- **Phone:** one column, a 16px gutter, no sideways scrolling, and 44px touch targets. Wide tables stack up, row by row.
-- **TV and controller:** arrows reach everything, as everything is a real button. Charts don't hold on to the arrows there, focus always shows, a button with only an icon says what it does when focus reaches it, and everything grows to read from the sofa.
-- **Keyboard:** Tab reaches everything, and on a chart the left and right arrows walk along the readings. Dialogs hold the focus, Escape closes them, and focus goes back where it came from.
-- **Reduced motion** is respected: only the "waiting" dot moves at all, and it stops.
+The page appears as **Statistics** in the main menu.
 
-Colours come from the theme. Series 1 is the theme's accent, and the others turn its hue at a fixed lightness, chosen by running every combination through a colour-blindness check on all the built-in themes.
+## What it needs
 
-## What it costs
+WittyMediaServer's numbers, and React 18 or newer, which the app provides. It has no other dependencies.
 
-Nothing until the page opens. Then:
+## Platforms
 
-- **One stream**, asking only for the sections of widgets on the layout, and only while the page is showing and not paused. It closes when the page is hidden or left, and reconnects with a growing wait. It's what keeps the server's sampler going, so this matters.
-- **The report and histories** are fetched only when a widget that needs them is near the screen, each no more than once a minute.
-- **No polling** for live numbers. **No chart library:** charts are a few hundred lines of SVG and CSS.
-- **A few widgets per frame:** new readings are drawn a few widgets at a time, and not at all for widgets scrolled away, so a cheap TV keeps a steady picture. A pointer moving over a chart writes to the page directly, with no render.
+It's one browser bundle for every system the server runs on, and it runs on whichever device opens the server. It has been seen working in a desktop browser, against a test server on Linux. Safari, real phones and real TVs have not been tried.
 
-## How it's built
+Not seen yet: a real TV, a controller, a screen reader, touch dragging, a live game session, sensors, and duplicates, bandwidth and most watched with real rows. It's built for phones (one column), TV and controller (arrows reach everything), keyboard, and reduced motion.
 
-A page gets one prop, `host`, and needs nothing else from the app:
+## Building and testing
 
-```ts
-type Host = {
-  request(method: string, path: string, body?: unknown): Promise<unknown> // the server's API, with the viewer's own access
-  user: { admin: boolean }
-  store: { get(key: string): unknown; set(key: string, value: unknown): unknown } // a small JSON store per account
-  token?: () => string // for the stream: a bearer token, if there is one
-  base?: () => string  // for the stream: the server's address, if it isn't the page's own
-}
-export const pages = { stats: StatsPage }
+You need Node.js 22, as CI uses, and Go for the manifest check. In a worktree, first run the copy of `dev-modules.mjs` kept above the repositories (`node D:/projects/dev-modules.mjs` on the development machine). It writes only links that git ignores, so the checkout builds against the repositories beside it.
+
+```bash
+npm install
 ```
 
-Without `token` and `base`, the stream is opened on the page's own address with its cookies.
+```bash
+npm run build:bundle
+```
+
+That makes one script and one stylesheet, as a server installs them. To check the manifest:
+
+```bash
+go run github.com/wittywilla/wittymodule/cmd/wittymodule check .
+```
+
+```bash
+npm test
+```
+
+The tests cover layouts, stored data, every widget's view, CSV, number formats and reading the stream.
+
+A page gets one prop, `host`, and needs nothing else from the app: `request` for the server's API, `user`, a small `store` per account, and optionally `token` and `base` for the stream.
 
 ```
 src/widgets.ts    every widget: what it needs and what can have it; the presets
@@ -98,18 +83,9 @@ src/charts.tsx    the charts and tables
 src/Widget.tsx, StatsPage.tsx, Detail.tsx, Customise.tsx, parts.tsx, stats.css    the screen
 ```
 
-## Tests
-
-```bash
-npm test               # layouts, stored data, every widget's view, CSV, number formats, reading the stream
-npm run build:bundle   # one script and one stylesheet, as a server installs it
-```
-
 ## Licence
 
-**Apache-2.0**, the same licence as WittyMediaServer. © 2026 WittyWilla and contributors.
-Use, change and share it; if you redistribute it or build on it, keep the [NOTICE](NOTICE)
-attribution, *“WittyStats, developed by WittyWilla”*, in your NOTICE file, documentation or About screen.
+Apache-2.0: see [LICENSE](LICENSE) and [NOTICE](NOTICE). If you redistribute it or build on it, keep the NOTICE attribution.
 
 ## Legal
 
