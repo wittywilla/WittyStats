@@ -27,7 +27,7 @@ Every widget has a **switch to a table**, and one switch does them all. Tables a
 
 **What it costs.** Nothing until the page opens. Then one stream, asking only for what's on the layout and only while the page is showing. The report and histories are fetched when a widget that needs them is near the screen, no more than once a minute. There's no polling for live numbers and no chart library.
 
-How to use it is in **Help** inside WittyMediaServer: see the statistics guide.
+How to use it is in **Help** inside WittyMediaServer: see Server statistics.
 
 ## How to get it
 
