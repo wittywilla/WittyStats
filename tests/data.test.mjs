@@ -189,3 +189,18 @@ test('picture sizes run from the largest down, whatever order they arrive in', (
   const v = buildView('resolutions', ctx()).view
   assert.deepEqual(v.bars[0].rows.map((r) => r.label), ['4K', 'SD'])
 })
+
+test('a drive\'s health is words, and nothing until it is known', () => {
+  const ctx = (drives) => ({
+    catalog: { access: { visible: true, full: true }, sections: [{ id: 'disks', title: 'Disks', available: true }], series: [], ranges: [], everySec: 2 },
+    now: { time: 1, volumes: [{ mount: 'C:\\', kind: 'fixed', type: 'ntfs', total: 100, free: 50 }] }, samples: 1, report: drives ? { drives } : null, reportError: null,
+    range: '1h', series: () => null, history: { loading: false, failed: false }, clock: 1,
+  })
+  const view = (drives) => buildView('disks', ctx(drives))
+  assert.doesNotMatch(view(undefined).items[0].sub, /health|healthy|attention/)
+  assert.match(view([{ mount: 'C:\\', checked: true, lines: ['Fine.'] }]).items[0].sub, /healthy/)
+  assert.match(view([{ mount: 'C:\\', checked: true, bad: true, lines: ['Failing.'] }]).items[0].sub, /needs attention/)
+  const notChecked = view([{ mount: 'C:\\', checked: false, lines: [], note: 'Needs rights.' }])
+  assert.match(notChecked.items[0].sub, /not checked/)
+  assert.equal(notChecked.tables[0].rows[0].health, 'Needs rights.')
+})

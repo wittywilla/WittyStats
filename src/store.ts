@@ -4,13 +4,14 @@
 // - the report and histories are fetched only when a widget on screen needs them, and each no
 //   more than once a minute. Live numbers are never polled.
 import { FrameReader, retryWait } from './frames.ts'
-import type { Catalog, History, Host, MetricsNow, Report } from './types.ts'
+import type { Catalog, DriveHealth, History, Host, MetricsNow, Report } from './types.ts'
 import type { HistoryState, SeriesData } from './views.ts'
 
 export type StreamState = 'off' | 'connecting' | 'live' | 'retrying' | 'hidden' | 'paused'
 export type Slice = 'catalog' | 'now' | 'report' | 'history' | 'stream'
 
 const MINUTE = 60000
+const DRIVES_EVERY = 10 * MINUTE
 const WATCHDOG = 15000 // a reading comes every two seconds, so this long means it has gone quiet
 const KEEP = 150 // five minutes of readings, for the end of a chart
 
@@ -73,6 +74,9 @@ export class StatsStore {
   private reportBusy = false
   private ranges = new Map<string, RangeEntry>()
   private wantReport = false
+  private drives: DriveHealth[] | null = null
+  private drivesAt = 0
+  private drivesBusy = false
   private wantSeries: string[] = []
   private range = '1h'
 
@@ -247,12 +251,27 @@ export class StatsStore {
     this.ensureReport()
   }
 
+  // What each drive says about itself. Slow to ask, and the server keeps it for ten minutes,
+  // so this asks no more often. Only the whole machine has any of this.
+  private ensureDrives() {
+    if (!this.catalog?.access.full || this.drivesBusy || Date.now() - this.drivesAt < DRIVES_EVERY) return
+    this.drivesBusy = true
+    this.host.request<{ drives: DriveHealth[] }>('GET', '/system/metrics/drives').then((r) => {
+      this.drives = r.drives
+      if (this.report) this.report = { ...this.report, drives: r.drives }
+      this.drivesAt = Date.now()
+      this.emit('report')
+    }).catch(() => { /* the screen just doesn't mention health */ }).finally(() => { this.drivesBusy = false })
+  }
+
   private ensureReport() {
     if (!this.wantReport || this.reportBusy || Date.now() - this.reportAt < MINUTE) return
     this.reportBusy = true
     this.host.request<Report>('GET', '/system/metrics/report').then((r) => {
+      r.drives = this.drives ?? undefined
       this.report = r
       this.reportError = null
+      this.ensureDrives()
     }).catch((e) => {
       this.reportError = statusOf(e) === 403 ? 'This account can’t see this any more.' : 'The numbers couldn’t be added up just now.'
     }).finally(() => {

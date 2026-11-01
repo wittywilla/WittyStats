@@ -52,8 +52,10 @@ export type History = {
 }
 
 export type ReportCount = { name: string; items: number; bytes: number }
+export type DriveHealth = { mount: string; checked: boolean; bad?: boolean; lines: string[]; note?: string }
 export type Report = {
   generatedAt: number
+  drives?: DriveHealth[] // from its own address, added here by the store
   libraries: { id: number; name: string; type: string; items: number; bytes: number; missing: number; lastScanAt?: number }[]
   byType: ReportCount[]
   codecs: ReportCount[]

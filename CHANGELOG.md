@@ -2,6 +2,10 @@
 
 What changed in WittyStats, newest first.
 
+## 0.1.1
+
+- The disk space widget says what each drive reports about its own health, where the system will say.
+
 ## 0.1.0
 
 The first version: the statistics screen for WittyMediaServer 0.6.0-alpha.

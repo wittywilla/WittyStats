@@ -55,6 +55,16 @@ export const rangeSeconds = (r: string) => RANGE_SECONDS[r] ?? 3600
 export const rangeName = (r: string) => RANGE_NAMES[r] ?? r
 export const rangeWords = (r: string) => RANGE_WORDS[r] ?? r
 
+// What a drive says about itself, once that's known, in a word and in full. Words rather than a
+// colour, and nothing at all until there's an answer.
+function driveHealth(c: Ctx, mount: string) {
+  const d = c.report?.drives?.find((x) => x.mount === mount)
+  if (!d) return null
+  if (!d.checked) return { short: 'health not checked', long: d.note || 'Not checked.' }
+  const said = d.lines.join(' ')
+  return d.bad ? { short: 'needs attention', long: 'Needs attention. ' + said } : { short: 'healthy', long: 'Healthy. ' + said }
+}
+
 const col = (key: string, label: string, kind: Kind = 'text'): Column => ({ key, label, kind })
 const table = (caption: string, columns: Column[], rows: Row[], note?: string): Table => ({ caption, columns, rows, note })
 
@@ -273,15 +283,16 @@ const BUILDERS: Record<string, Builder> = {
     const shown = detail ? vols : vols.slice(0, 6)
     const items: Item[] = shown.map((v) => {
       const used = v.total - v.free, pct = v.total ? (used / v.total) * 100 : 0
-      return { key: v.mount, title: v.mount, sub: [nice(v.kind), v.type].filter(Boolean).join(', '), meters: [{ label: 'Used', pct, text: `${fmtBytes(v.free)} free of ${fmtBytes(v.total)}`, ...fullness(pct) }] }
+      const health = driveHealth(c, v.mount)
+      return { key: v.mount, title: v.mount, sub: [nice(v.kind), v.type, health?.short].filter(Boolean).join(', '), meters: [{ label: 'Used', pct, text: `${fmtBytes(v.free)} free of ${fmtBytes(v.total)}`, ...fullness(pct) }] }
     })
     const tightest = vols.reduce((a, b) => ((b.total ? (b.total - b.free) / b.total : 0) > (a.total ? (a.total - a.free) / a.total : 0) ? b : a))
     const tightPct = tightest.total ? ((tightest.total - tightest.free) / tightest.total) * 100 : 0
     return {
       state: 'ok', items, more: vols.length > shown.length ? `${plural(vols.length - shown.length, 'more disk')} in the details.` : undefined,
       summary: `${plural(vols.length, 'disk')}. The fullest is ${tightest.mount} at ${fmtPercent(tightPct)}, with ${fmtBytes(tightest.free)} free.`,
-      tables: [table('Disk space now', [col('mount', 'Disk'), col('kind', 'Kind'), col('type', 'Format'), col('used', 'Used', 'pct'), col('free', 'Free', 'bytes'), col('total', 'Total', 'bytes')],
-        vols.map((v) => ({ mount: v.mount, kind: nice(v.kind), type: v.type, used: v.total ? ((v.total - v.free) / v.total) * 100 : 0, free: v.free, total: v.total })))],
+      tables: [table('Disk space now', [col('mount', 'Disk'), col('kind', 'Kind'), col('type', 'Format'), col('used', 'Used', 'pct'), col('free', 'Free', 'bytes'), col('total', 'Total', 'bytes'), col('health', 'Health')],
+        vols.map((v) => ({ mount: v.mount, kind: nice(v.kind), type: v.type, used: v.total ? ((v.total - v.free) / v.total) * 100 : 0, free: v.free, total: v.total, health: driveHealth(c, v.mount)?.long ?? '' })))],
     }
   },
   diskio(c, detail) {
