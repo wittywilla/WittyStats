@@ -4,6 +4,14 @@ A statistics screen for WittyMediaServer that you arrange yourself: the machine,
 
 It's the screen only. The server collects the numbers and decides who may see what, with or without this module.
 
+<!-- pictures -->
+
+![A page of charts about the server](docs/images/stats.webp)
+
+<sub>From a test server.</sub>
+
+<!-- /pictures -->
+
 ## What it does
 
 | Group | Widgets |
