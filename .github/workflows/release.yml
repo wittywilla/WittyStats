@@ -24,7 +24,8 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 22
-      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install
+        run: if [ -f package-lock.json ]; then npm ci --ignore-scripts --no-audit --no-fund; else npm install --ignore-scripts --no-audit --no-fund; fi
       - run: npm test --if-present
 
   # From a fresh checkout, running no tests.
@@ -49,7 +50,8 @@ jobs:
         run: |
           want="$(sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' module.json | head -1)"
           [ "v$want" = "$GITHUB_REF_NAME" ] || { echo "module.json says $want, and the tag is $GITHUB_REF_NAME"; exit 1; }
-      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install
+        run: if [ -f package-lock.json ]; then npm ci --ignore-scripts --no-audit --no-fund; else npm install --ignore-scripts --no-audit --no-fund; fi
       - run: npm run build:bundle
       - name: Pack the bundle and write the checksum list
         run: go run github.com/wittywilla/wittymodule/cmd/wittymodule@v0.3.0 pack -web dist -out release .
