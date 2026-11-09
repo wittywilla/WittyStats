@@ -2,7 +2,7 @@
   "id": "wittystats",
   "name": "WittyStats",
   "version": "0.1.2",
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-or-later",
   "repo": "wittywilla/WittyStats",
   "delivery": "web",
   "entry": "index.js",
