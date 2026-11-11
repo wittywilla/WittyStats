@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 import { useRef, useState } from 'react'
 import { MAX_LAYOUTS, MAX_NAME, activeLayout, cleanName, nameTaken, type Saved } from './layout.ts'
 import { Btn, Dialog, Icon } from './parts.tsx'

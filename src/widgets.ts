@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 // Every widget there is: what it's called, which part of the server's catalogue decides
 // whether it can show anything, and what it needs. views.ts says what each one shows.
 import type { Catalog } from './types.ts'

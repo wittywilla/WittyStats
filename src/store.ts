@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 // Everything received from the server, and the rules for how little to ask for it:
 // - the stream is open only while the page is showing and not paused, and only for the
 //   sections of widgets on this layout. It's what keeps the server's sampler going;

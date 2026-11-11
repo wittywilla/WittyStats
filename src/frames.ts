@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 // Reads server-sent events out of the pieces a fetch hands over. A piece can end anywhere,
 // even inside a character, so what's incomplete waits for the next one.
 export type Frame = { event: string; data: string }

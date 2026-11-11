@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 // Numbers for people: GB, Mbps, "3 hr 20 min". Nothing here touches the page.
 
 export type Kind = 'text' | 'count' | 'bytes' | 'bytesRate' | 'bitsRate' | 'kbps' | 'pct' | 'dur' | 'time' | 'ago' | 'ms' | 'fps' | 'celsius' | 'mbps'

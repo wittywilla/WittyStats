@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 // CSV and JSON of what's on screen. Everything is made in the browser from what it already
 // holds, so an export asks the server for nothing.
 import { UNIT_NAMES, type Kind } from './format.ts'

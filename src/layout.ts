@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 // Layouts: which widgets, in what order, how big. Plain functions over plain data, with no
 // page in sight. A stored layout comes from someone's account, may be years old or damaged, and
 // is never trusted: parseSaved always gives something that can be drawn.

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 // What the module is given, and the answers it reads. The shapes are the server's: Go types in
 // internal/server/api_metrics.go, internal/server/streams_live.go and internal/metrics.
 

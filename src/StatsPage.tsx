@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type PointerEvent as ReactPointer } from 'react'
 import { AddDialog, ConfirmDialog, CustomiseBar, NameDialog } from './Customise.tsx'
 import { Detail } from './Detail.tsx'

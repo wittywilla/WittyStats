@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 import { useEffect } from 'react'
 import { fileName, tablesToCsv, tablesToJson } from './exports.ts'
 import { Btn, Dialog, saveFile } from './parts.tsx'

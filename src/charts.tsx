@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 import { memo, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKey, type PointerEvent as ReactPointer } from 'react'
 import type { Column, Table } from './exports.ts'
 import { fmtCompact, fmtTime, formatValue, niceMax, type Kind } from './format.ts'

@@ -1,3 +1,5 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+/* Copyright (C) 2026 WittyWilla and contributors */
 /* WittyStats. Tokens only, and every class prefixed wst-: the module brings no colour or size of
    its own apart from how it mixes the theme's. Charts take their colours from the theme:
    series 1 is the theme's accent, and series 2 and 3 turn its hue, held to a lightness and

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { csvCell, fileName, neutralize, tableToCsv, tablesToCsv, tablesToJson } from '../src/exports.ts'

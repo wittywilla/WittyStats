@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { fmtAgo, fmtBits, fmtBytes, fmtBytesRate, fmtCelsius, fmtCompact, fmtCount, fmtDuration, fmtFps, fmtKbps, fmtMbps, fmtMs, fmtPercent, formatValue, niceMax } from '../src/format.ts'

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 WittyWilla and contributors
 // What each widget shows, worked out from what's been received. Plain data in, plain data out:
 // the drawing is in charts.tsx, and one set of numbers feeds the chart, the table, the text a
 // screen reader gets and the exports, so they can never disagree.
