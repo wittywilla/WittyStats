@@ -1,0 +1,7 @@
+{
+  "format": "wittymodule-sdui",
+  "formatVersion": 1,
+  "module": "wittystats",
+  "catalog": 2,
+  "theme": { "scope": "wittystats", "label": "Statistics" }
+}

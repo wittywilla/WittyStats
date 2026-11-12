@@ -4,6 +4,7 @@ What changed in WittyStats, newest first.
 
 ## Unreleased
 
+- Carries `sdui.json` with its theme scope. Its Statistics page stays a page of its web bundle, on the web and desktop apps.
 - **WittyStats 0.2.0:** Fits WittyMediaServer 0.8.x.
 
 - A **Help** link at the top of the page opens the Server statistics guide, and the page says where the owner chooses who may look.
