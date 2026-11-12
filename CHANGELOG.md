@@ -4,6 +4,8 @@ What changed in WittyStats, newest first.
 
 ## Unreleased
 
+- **WittyStats 0.2.0:** Fits WittyMediaServer 0.8.x.
+
 - A **Help** link at the top of the page opens the Server statistics guide, and the page says where the owner chooses who may look.
 - The workflows use WittyModule 0.3.0, as the other modules do.
 

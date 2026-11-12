@@ -1,7 +1,7 @@
 {
   "id": "wittystats",
   "name": "WittyStats",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "license": "AGPL-3.0-or-later",
   "repo": "wittywilla/WittyStats",
   "delivery": "web",
@@ -9,7 +9,7 @@
   "style": "style.css",
   "api": 3,
   "minServer": "0.6.0-alpha",
-  "maxServer": "0.6.x",
+  "maxServer": "0.8.x",
   "group": "system",
   "summary": "A statistics screen you arrange yourself: the machine, streams, libraries and history, as charts or tables, with exports.",
   "updates": "The screen itself: its widgets, charts, tables, layouts and exports. New widgets can arrive this way.",
