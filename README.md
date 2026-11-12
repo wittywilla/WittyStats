@@ -95,6 +95,15 @@ src/Widget.tsx, StatsPage.tsx, Detail.tsx, Customise.tsx, parts.tsx, stats.css  
 
 GNU Affero General Public License v3.0 (or later): see [LICENSE](LICENSE) and [NOTICE](NOTICE). If you redistribute it or build on it, please keep the NOTICE attribution.
 
+
+## In every app: its server-driven UI
+
+It carries its own `sdui.json`: **Statistics** (`wittystats`), its own menu entry and page in every look. The web and desktop apps draw the dashboard (`wittystats.dashboard`): widgets, pause, time range, Charts or Tables, details with CSV and JSON, and resetting the layout. Televisions and phones get the server's figures, time in each library and the most watched titles and shows, from the server's `statistics` and `serverStatus` sources. **Settings, Statistics** (each profile's own): the time range and view it opens on, and live numbers or paused.
+
+**Stays in WittyStats' own code:** the dashboard on the web and desktop apps.
+
+The file is checked with `wittymodule check` and described in WittyMediaServer's [docs/SDUI-MODULES.md](https://github.com/wittywilla/WittyMediaServer/blob/master/docs/SDUI-MODULES.md).
+
 ## Legal
 
 WittyStats is an independent open-source project. It isn't associated with, sponsored by or endorsed by any maker of operating
