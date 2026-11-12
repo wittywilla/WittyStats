@@ -19,7 +19,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { build } from 'vite'
+import { build, version as viteVersion } from 'vite'
 
 const here = dirname(fileURLToPath(import.meta.url))
 
@@ -67,6 +67,9 @@ function standIn(from, names) {
   }
   return lines.join('\n')
 }
+
+// One script, whichever bundler: Vite 8's Rolldown calls it codeSplitting, and warns at the old name.
+const oneFile = Number(viteVersion.split('.')[0]) >= 8 ? { codeSplitting: false } : { inlineDynamicImports: true }
 
 const HOST = 'globalThis.__wmsModuleHost'
 const shared = {
@@ -117,7 +120,7 @@ await build({
       preserveEntrySignatures: 'strict',
       // Reading a shared library's export has no effect, so unused ones can go.
       treeshake: { propertyReadSideEffects: false },
-      output: { format: 'es', inlineDynamicImports: true, entryFileNames: 'index.js', assetFileNames: (a) => (a.names?.some((n) => n.endsWith('.css')) ? 'style.css' : '[name]-[hash][extname]') },
+      output: { format: 'es', ...oneFile, entryFileNames: 'index.js', assetFileNames: (a) => (a.names?.some((n) => n.endsWith('.css')) ? 'style.css' : '[name]-[hash][extname]') },
     },
   },
 })
