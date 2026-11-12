@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build:bundle": "node build-bundle.mjs",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node sdui/kit/write-sdui.mjs --check sdui.json && node --test tests/*.test.mjs"
   },
   "repository": "github:wittywilla/WittyStats",
   "peerDependencies": {
