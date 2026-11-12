@@ -2,6 +2,67 @@
   "format": "wittymodule-sdui",
   "formatVersion": 1,
   "module": "wittystats",
-  "catalog": 2,
-  "theme": { "scope": "wittystats", "label": "Statistics" }
+  "catalog": 7,
+  "theme": { "scope": "wittystats", "label": "Statistics" },
+  "views": [
+    {
+      "id": "wittystats.dashboard",
+      "label": "Statistics dashboard",
+      "description": "The machine, streams, libraries and history as widgets you arrange: pause, time range, charts or tables, details with CSV and JSON, and resetting the layout. Drawn by WittyStats' web bundle.",
+      "platforms": ["web", "desktop"]
+    }
+  ],
+  "pages": [
+    {
+      "id": "wittystats",
+      "kind": "custom",
+      "title": "Statistics",
+      "icon": "chart",
+      "description": "The server and what has been watched: the dashboard where the app has it, and the server's figures and the most watched elsewhere.",
+      "sections": [
+        {
+          "id": "dashboard",
+          "component": "NativeView",
+          "props": { "view": "wittystats.dashboard" },
+          "children": [
+            {
+              "id": "figures",
+              "component": "WidgetGrid",
+              "props": { "columns": 4 },
+              "children": [
+                { "id": "server", "component": "Widget", "props": { "kind": "serverStatus", "title": "Server", "x": 0, "y": 0, "w": 2, "h": 1 } },
+                { "id": "time", "component": "Widget", "props": { "kind": "stats", "title": "Time in each library", "x": 2, "y": 0, "w": 2, "h": 1 }, "source": { "type": "statistics", "stat": "libraries", "period": "month", "limit": 6 } }
+              ]
+            },
+            { "id": "titles", "component": "Shelf", "props": { "title": "Most watched this month", "seeAll": "never" }, "source": { "type": "statistics", "stat": "titles", "period": "month", "limit": 20 } },
+            { "id": "shows", "component": "Shelf", "props": { "title": "Most watched shows this year", "seeAll": "never" }, "source": { "type": "statistics", "stat": "shows", "period": "year", "limit": 20 } }
+          ]
+        }
+      ]
+    }
+  ],
+  "navigation": [
+    { "id": "wittystats", "type": "page", "page": "wittystats", "placement": { "phone": "more", "tv": "more" } }
+  ],
+  "settings": [
+    {
+      "id": "wittystats",
+      "title": "Statistics",
+      "icon": "chart",
+      "groups": [
+        {
+          "title": "When it opens",
+          "footer": "Each profile chooses its own. Who may see statistics at all is set by the server's owner, under Settings, Activity.",
+          "rows": [
+            { "key": "openOn", "kind": "enum", "scope": "profile", "label": "Time range", "default": "last", "options": [
+              { "value": "last", "label": "The one I used last" }, { "value": "15m", "label": "15 min" }, { "value": "1h", "label": "1 hr" }, { "value": "6h", "label": "6 hr" },
+              { "value": "24h", "label": "24 hr" }, { "value": "7d", "label": "7 days" }, { "value": "30d", "label": "30 days" }, { "value": "90d", "label": "90 days" } ] },
+            { "key": "view", "kind": "enum", "scope": "profile", "label": "Show as", "default": "last", "options": [
+              { "value": "last", "label": "As I left it" }, { "value": "chart", "label": "Charts" }, { "value": "table", "label": "Tables" } ] },
+            { "key": "live", "kind": "bool", "scope": "profile", "label": "Live numbers", "help": "Off: the dashboard opens paused, and Resume starts them.", "default": true }
+          ]
+        }
+      ]
+    }
+  ]
 }

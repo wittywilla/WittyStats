@@ -12,6 +12,7 @@ import { StatsStore, type StreamState } from './store.ts'
 import type { Catalog, Host } from './types.ts'
 import { rangeName, seriesFor } from './views.ts'
 import { Card } from './Widget.tsx'
+import { DEFAULT_STATS_SETTINGS, SETTINGS_PATH, openWith, readSettings, type StatsSettings } from './settings.ts'
 import { PRESET_NAMES, WIDGET_BY_ID, allowed, availability, liveSections, type PresetId } from './widgets.ts'
 import './stats.css'
 
@@ -27,6 +28,7 @@ export function StatsPage({ host }: { host: Host }) {
   const [catalog, setCatalog] = useState<Catalog | null>(null)
   const [failed, setFailed] = useState<string | null>(null)
   const [saved, setSavedState] = useState<Saved | null>(null)
+  const [settings, setSettings] = useState<StatsSettings | null>(null)
 
   useEffect(() => {
     let gone = false
@@ -37,6 +39,8 @@ export function StatsPage({ host }: { host: Host }) {
     })
     store.reopen()
     void store.loadCatalog()
+    // If the settings can't be read, the dashboard opens as it was left.
+    Promise.resolve().then(() => host.request('GET', SETTINGS_PATH)).then((a) => { if (!gone) setSettings(readSettings(a)) }).catch(() => { if (!gone) setSettings(DEFAULT_STATS_SETTINGS) })
     Promise.resolve().then(() => host.store.get(STORE_KEY)).then((raw) => { if (!gone) setSavedState(parseSaved(raw, !host.user.admin)) }).catch(() => { if (!gone) setSavedState(stock(!host.user.admin)) })
     return () => { gone = true; off(); store.close() }
   }, [store, host])
@@ -52,7 +56,7 @@ export function StatsPage({ host }: { host: Host }) {
       </div>
     )
   }
-  if (!catalog || !saved) return <div className="wst-page"><h1 className="wst-title">Statistics</h1><p className="wst-state waiting" role="status"><span className="wst-dot" aria-hidden="true" />Loading…</p></div>
+  if (!catalog || !saved || !settings) return <div className="wst-page"><h1 className="wst-title">Statistics</h1><p className="wst-state waiting" role="status"><span className="wst-dot" aria-hidden="true" />Loading…</p></div>
   if (!catalog.access.visible) {
     return (
       <div className="wst-page">
@@ -61,10 +65,12 @@ export function StatsPage({ host }: { host: Host }) {
       </div>
     )
   }
-  return <Dashboard host={host} store={store} catalog={catalog} initial={saved} />
+  return <Dashboard host={host} store={store} catalog={catalog} initial={openWith(saved, settings, catalog.ranges)} live={settings.live} />
 }
 
-function Dashboard({ host, store, catalog, initial }: { host: Host; store: StatsStore; catalog: Catalog; initial: Saved }) {
+function Dashboard({ host, store, catalog, initial, live }: { host: Host; store: StatsStore; catalog: Catalog; initial: Saved; live: boolean }) {
+  // Opening paused, when the profile's settings say so: Resume starts the live numbers.
+  useEffect(() => { if (!live) store.setPaused(true) }, [store, live])
   const ranges = catalog.ranges
   const [saved, setSaved] = useState<Saved>(() => (ranges.includes(initial.range) ? initial : { ...initial, range: ranges.includes(DEFAULT_RANGE) ? DEFAULT_RANGE : ranges[0] ?? DEFAULT_RANGE }))
   const [customising, setCustomising] = useState(false)

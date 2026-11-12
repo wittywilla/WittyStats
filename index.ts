@@ -20,5 +20,7 @@
 // nothing else from the app. See the README.
 import { StatsPage } from './src/StatsPage.tsx'
 
-export const pages = { stats: StatsPage }
+// The Statistics page is WittyStats' own server-driven page (sdui.json); on the web and desktop
+// apps its NativeView is drawn by this view.
+export const views = { 'wittystats.dashboard': StatsPage }
 export type { Host } from './src/types.ts'

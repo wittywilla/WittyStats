@@ -13,6 +13,5 @@
   "group": "system",
   "summary": "A statistics screen you arrange yourself: the machine, streams, libraries and history, as charts or tables, with exports.",
   "updates": "The screen itself: its widgets, charts, tables, layouts and exports. New widgets can arrive this way.",
-  "stays": "The numbers stay with the server, which collects them and decides who sees what, with or without this module. Saved layouts stay with each person's account.",
-  "pages": [{ "id": "stats", "title": "Statistics", "where": "main", "icon": "chart", "admin": false }]
+  "stays": "The numbers stay with the server, which collects them and decides who sees what, with or without this module. Saved layouts stay with each person's account."
 }

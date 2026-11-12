@@ -4,6 +4,8 @@ What changed in WittyStats, newest first.
 
 ## Unreleased
 
+- **Statistics is WittyStats' own server-driven page and menu entry** (`sdui.json`), drawn in every look. On the web and desktop apps it is the dashboard (`wittystats.dashboard`); on televisions and phones the server's figures, time in each library and the most watched titles and shows. The old module page (`/m/wittystats/stats`, `pages` in module.json) is gone.
+- **Settings**, each profile's own, under Settings, Modules: the time range and Charts or Tables it opens on, and whether it opens with live numbers or paused.
 - **Module API 4**, for WittyMediaServer 0.8.0-alpha and later: the module carries its own server-driven UI in `sdui.json`, which `wittymodule pack` puts in every archive.
 - Carries `sdui.json` with its theme scope. Its Statistics page stays a page of its web bundle, on the web and desktop apps.
 - **WittyStats 0.2.0:** Fits WittyMediaServer 0.8.x.
