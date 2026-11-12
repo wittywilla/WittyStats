@@ -4,6 +4,7 @@ What changed in WittyStats, newest first.
 
 ## Unreleased
 
+- **Module API 4**, for WittyMediaServer 0.8.0-alpha and later: the module carries its own server-driven UI in `sdui.json`, which `wittymodule pack` puts in every archive.
 - Carries `sdui.json` with its theme scope. Its Statistics page stays a page of its web bundle, on the web and desktop apps.
 - **WittyStats 0.2.0:** Fits WittyMediaServer 0.8.x.
 
