@@ -2,7 +2,7 @@
 
 What changed in WittyStats, newest first.
 
-## Unreleased
+## 0.3.0
 
 - **Module API 5 (0.3.0):** carries `integration.json` (web host API 5, SDUI catalogue revision 8) and its bundle exports `register(host)`, claiming nothing: Statistics is its SDUI page on every app, TV included, and the dashboard its view on the web and desktop apps. The numbers and who may see them stay the server's.
 - Built with WittyModule 0.5.2 and its web builder; the module's own copy of `build-bundle.mjs` is gone, and the SDUI kit in `sdui/kit/` is WittyModule 0.5.2's (catalogue revision 8).
