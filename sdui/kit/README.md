@@ -1,5 +1,3 @@
-<!-- Written by WittyModule's kit/module-kit.sh from kit/sdui: don't edit, run module-kit.sh again. -->
-
 # The module SDUI kit, for web modules
 
 Every module carries its own SDUI: a file called `sdui.json` beside `module.json`, which

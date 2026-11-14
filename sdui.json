@@ -2,7 +2,7 @@
   "format": "wittymodule-sdui",
   "formatVersion": 1,
   "module": "wittystats",
-  "catalog": 7,
+  "catalog": 8,
   "theme": { "scope": "wittystats", "label": "Statistics" },
   "views": [
     {

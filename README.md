@@ -65,7 +65,7 @@ npm install
 npm run build:bundle
 ```
 
-That makes one script and one stylesheet, as a server installs them. To check the manifest:
+That builds with WittyModule's one web builder (`kit/web/build-bundle.mjs`, from a WittyModule checkout beside this one, or `WITTYMODULE=<checkout>`), and makes one script and one stylesheet, as a server installs them. To check the manifest:
 
 ```bash
 go run github.com/wittywilla/wittymodule/cmd/wittymodule check .
@@ -96,6 +96,10 @@ src/Widget.tsx, StatsPage.tsx, Detail.tsx, Customise.tsx, parts.tsx, stats.css  
 GNU Affero General Public License v3.0 (or later): see [LICENSE](LICENSE) and [NOTICE](NOTICE). If you redistribute it or build on it, please keep the NOTICE attribution.
 
 
+## Module API 5
+
+WittyStats 0.3.0 is built for module API 5 and carries `integration.json`. It asks for web host API 5 and SDUI catalogue revision 8, and claims no routes or hooks: Statistics is its SDUI page, drawn by every app, with the dashboard as its view `wittystats.dashboard` on the web and desktop apps. Its `register(host)` export returns nothing. It has no service and no database of its own: the numbers are the server's (`/api/system/metrics…`, and who may see them), and each person's layout is kept in the server's store for modules.
+
 ## In every app: its server-driven UI
 
 It carries its own `sdui.json`: **Statistics** (`wittystats`), its own menu entry and page in every look. The web and desktop apps draw the dashboard (`wittystats.dashboard`): widgets, pause, time range, Charts or Tables, details with CSV and JSON, and resetting the layout. Televisions and phones get the server's figures, time in each library and the most watched titles and shows, from the server's `statistics` and `serverStatus` sources. **Settings, Statistics** (each profile's own): the time range and view it opens on, and live numbers or paused.
@@ -117,7 +121,7 @@ Local law applies to how you use it. This isn't legal advice.
 
 A version tag builds the bundle for the browser, signs the checksum list, and publishes a release that servers can install.
 
-Versions move in small steps as work lands. `go run github.com/wittywilla/wittymodule/cmd/wittymodule@v0.4.0 bump .` raises it
+Versions move in small steps as work lands. `go run github.com/wittywilla/wittymodule/cmd/wittymodule@v0.5.2 bump .` raises it
 everywhere it is written (add `-part minor` for a bigger step). A bump isn't a release: nothing is
 tagged or published until you tag it. CI fails when code changed since the last tag and the version
 didn't, because tags never move.

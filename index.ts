@@ -23,4 +23,11 @@ import { StatsPage } from './src/StatsPage.tsx'
 // The Statistics page is WittyStats' own server-driven page (sdui.json); on the web and desktop
 // apps its NativeView is drawn by this view.
 export const views = { 'wittystats.dashboard': StatsPage }
+
+// Module API 5: register(host) is the web host API 5 entry. It claims nothing: the Statistics
+// page is an SDUI page (sdui.json), every app draws it, and its NativeView is `views` above, which
+// the server's renderer loads itself (WittyModule 0.5.2's Registration has no views).
+export function register(_host: unknown): Record<string, never> {
+  return {}
+}
 export type { Host } from './src/types.ts'

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Copyright (C) 2026 WittyWilla and contributors
-// Written by WittyModule's kit/module-kit.sh from kit/sdui: don't edit, run module-kit.sh again.
 // Writes a module's sdui.json from its definition in TypeScript (or JavaScript, or JSON),
 // after checking it with checkModuleUI; on an error it prints every issue, writes nothing
 // and exits with 1. Run it at build time, before packing:

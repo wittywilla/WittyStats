@@ -4,6 +4,9 @@ What changed in WittyStats, newest first.
 
 ## Unreleased
 
+- **Module API 5 (0.3.0):** carries `integration.json` (web host API 5, SDUI catalogue revision 8) and its bundle exports `register(host)`, claiming nothing: Statistics is its SDUI page on every app, TV included, and the dashboard its view on the web and desktop apps. The numbers and who may see them stay the server's.
+- Built with WittyModule 0.5.2 and its web builder; the module's own copy of `build-bundle.mjs` is gone, and the SDUI kit in `sdui/kit/` is WittyModule 0.5.2's (catalogue revision 8).
+
 - **Statistics is WittyStats' own server-driven page and menu entry** (`sdui.json`), drawn in every look. On the web and desktop apps it is the dashboard (`wittystats.dashboard`); on televisions and phones the server's figures, time in each library and the most watched titles and shows. The old module page (`/m/wittystats/stats`, `pages` in module.json) is gone.
 - **Settings**, each profile's own, under Settings, Modules: the time range and Charts or Tables it opens on, and whether it opens with live numbers or paused.
 - **Module API 4**, for WittyMediaServer 0.8.0-alpha and later: the module carries its own server-driven UI in `sdui.json`, which `wittymodule pack` puts in every archive.

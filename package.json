@@ -1,6 +1,6 @@
 {
   "name": "@wittywilla/wittystats",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A statistics screen for WittyMediaServer that you arrange yourself, with charts, tables and exports on every device.",
   "license": "AGPL-3.0-or-later",
   "author": "WittyWilla (https://github.com/wittywilla)",
@@ -11,7 +11,7 @@
     "./*.css": "./*.css"
   },
   "scripts": {
-    "build:bundle": "node build-bundle.mjs",
+    "build:bundle": "node ${WITTYMODULE:-../WittyModule}/kit/web/build-bundle.mjs .",
     "test": "node sdui/kit/write-sdui.mjs --check sdui.json && node --test tests/*.test.mjs"
   },
   "repository": "github:wittywilla/WittyStats",
@@ -20,6 +20,8 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
-    "vite": "^6.3.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vite": "^8.3.5"
   }
 }
