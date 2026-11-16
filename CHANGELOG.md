@@ -2,6 +2,10 @@
 
 What changed in WittyStats, newest first.
 
+## 0.3.1
+
+- The README's picture is retaken from WittyMediaServer 0.8.0-alpha, on a test server with open media only.
+
 ## 0.3.0
 
 - **Module API 5 (0.3.0):** carries `integration.json` (web host API 5, SDUI catalogue revision 8) and its bundle exports `register(host)`, claiming nothing: Statistics is its SDUI page on every app, TV included, and the dashboard its view on the web and desktop apps. The numbers and who may see them stay the server's.
