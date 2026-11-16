@@ -2,7 +2,7 @@
 
 A statistics screen for WittyMediaServer that you arrange yourself: the machine, who is playing what, your libraries and their history, as charts or tables. You need it if you want to see those numbers on a page of their own.
 
-It's the screen only. The server collects the numbers and decides who may see what, with or without this module.
+It's a module of [WittyMediaServer](https://github.com/wittywilla/WittyMediaServer) ([wittymediaserver.com](https://wittymediaserver.com)), on module API 5, and it's the screen only. The server collects the numbers and decides who may see what, with or without this module.
 
 <!-- pictures -->
 
@@ -39,7 +39,7 @@ How to use it is in **Help** inside WittyMediaServer: see Server statistics.
 
 ## How to get it
 
-An admin adds it from the module store inside WittyMediaServer: **Settings → Modules**, then **Browse the store**, then **Add** beside WittyStats. That needs WittyMediaServer 0.6.0-alpha or later, and it works with nothing older. The range this version fits is in `module.json`: 0.6.0-alpha through 0.6.x.
+An admin adds it from the module store inside WittyMediaServer: **Settings → Modules**, then **Browse the store**, then **Add** beside WittyStats. The range this version fits is in `module.json`: WittyMediaServer 0.8.0-alpha through 0.8.x, module API 5. The server takes API 5 modules only, so older servers can't use this version. How modules work on the server is in its [docs/MODULES.md](https://github.com/wittywilla/WittyMediaServer/blob/master/docs/MODULES.md).
 
 The page appears as **Statistics** in the main menu.
 
@@ -55,10 +55,10 @@ Not seen yet: a real TV, a controller, a screen reader, touch dragging, a live g
 
 ## Building and testing
 
-You need Node.js 22, as CI uses, and Go for the manifest check. In a worktree, first run the copy of `dev-modules.mjs` kept above the repositories (`node D:/projects/dev-modules.mjs` on the development machine). It writes only links that git ignores, so the checkout builds against the repositories beside it.
+You need Node.js 22, as CI uses, and Go for the manifest check. In a worktree, first run WittyMediaServer's `scripts/dev-modules.mjs` (or the copy its `--root` option keeps in the folder above the repositories). It writes only links that git ignores, so the checkout builds against the repositories beside it.
 
 ```bash
-npm install
+npm ci
 ```
 
 ```bash
@@ -68,7 +68,7 @@ npm run build:bundle
 That builds with WittyModule's one web builder (`kit/web/build-bundle.mjs`, from a WittyModule checkout beside this one, or `WITTYMODULE=<checkout>`), and makes one script and one stylesheet, as a server installs them. To check the manifest:
 
 ```bash
-go run github.com/wittywilla/wittymodule/cmd/wittymodule check .
+go run github.com/wittywilla/wittymodule/cmd/wittymodule@v0.5.2 check .
 ```
 
 ```bash
@@ -91,11 +91,6 @@ src/charts.tsx    the charts and tables
 src/Widget.tsx, StatsPage.tsx, Detail.tsx, Customise.tsx, parts.tsx, stats.css    the screen
 ```
 
-## Licence
-
-GNU Affero General Public License v3.0 (or later): see [LICENSE](LICENSE) and [NOTICE](NOTICE). If you redistribute it or build on it, please keep the NOTICE attribution.
-
-
 ## Module API 5
 
 WittyStats 0.3.0 is built for module API 5 and carries `integration.json`. It asks for web host API 5 and SDUI catalogue revision 8, and claims no routes or hooks: Statistics is its SDUI page, drawn by every app, with the dashboard as its view `wittystats.dashboard` on the web and desktop apps. Its `register(host)` export returns nothing. It has no service and no database of its own: the numbers are the server's (`/api/system/metrics…`, and who may see them), and each person's layout is kept in the server's store for modules.
@@ -107,6 +102,12 @@ It carries its own `sdui.json`: **Statistics** (`wittystats`), its own menu entr
 **Stays in WittyStats' own code:** the dashboard on the web and desktop apps.
 
 The file is checked with `wittymodule check` and described in WittyMediaServer's [docs/SDUI-MODULES.md](https://github.com/wittywilla/WittyMediaServer/blob/master/docs/SDUI-MODULES.md).
+
+## Licence
+
+GNU Affero General Public License v3.0 (or later): see [LICENSE](LICENSE) and [NOTICE](NOTICE). If you redistribute it or build on it, please keep the NOTICE attribution.
+
+WittyStats is part of the WittyMediaServer project: [server repository](https://github.com/wittywilla/WittyMediaServer), [wittymediaserver.com](https://wittymediaserver.com).
 
 ## Legal
 
