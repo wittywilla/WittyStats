@@ -4,7 +4,14 @@ What changed in WittyStats, newest first.
 
 ## 0.3.1
 
+### What's new
+
+- On a new server, Statistics says it is collecting its first readings and that this takes up to a minute, instead of only "Waiting".
+
+### Developer notes
+
 - The README's picture is retaken from WittyMediaServer 0.8.0-alpha, on a test server with open media only.
+- `NOT_YET` in `src/views.ts` is the new wording (WittyMediaServer #553).
 
 ## 0.3.0
 
