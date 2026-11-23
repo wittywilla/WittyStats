@@ -167,7 +167,8 @@ const countText = (c: ReportCount) => `${fmtBytes(c.bytes)}, ${plural(c.items, '
 
 type Builder = (c: Ctx, detail: boolean) => View
 
-const NOT_YET = 'Waiting for the first reading…'
+// A new server has read nothing yet: say it's on its way, and roughly how long (#553).
+const NOT_YET = 'Collecting the first readings. On a new server this takes up to a minute.'
 // The first reading on a new connection can come before the sampler has looked at anything, so
 // a part missing from it isn't news. If it's still missing after that, it's really not there.
 const missing = (c: Ctx, later: string): View => (c.samples < 2 ? { state: 'loading', message: NOT_YET, tables: [], summary: NOT_YET } : empty(later))
